@@ -1,0 +1,7 @@
+rm -rf target report lcov.info
+export CARGO_INCREMENTAL=0
+export RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Zno-landing-pads"
+cargo build --verbose $CARGO_OPTIONS
+cargo test --verbose $CARGO_OPTIONS -- --nocapture
+grcov . --branch --ignore-not-existing -t lcov -o lcov.info
+genhtml -o report --demangle-cpp --branch --show-details --highlight --ignore-errors source --legend lcov.info
